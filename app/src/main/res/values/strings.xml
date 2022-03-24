@@ -32,4 +32,15 @@
     <string name="good_habit_repr">хорошая</string>
     <string name="bad_habit_repr">вредная</string>
 
+    <!-- Strings in menu -->
+    <string name="menu_open">Открыть</string>
+    <string name="menu_close">Закрыть</string>
+    <string name="menu_item_text_habits">Привычки</string>
+    <string name="menu_item_text_info">Информация о приложении</string>
+
+    <!-- Strings in App info -->
+    <string name="app_info_header">Информация о приложении</string>
+    <string name="app_info_version">Версия: 2</string>
+    <string name="app_info_author">Автор: Рыженков Илья</string>
+
 </resources>

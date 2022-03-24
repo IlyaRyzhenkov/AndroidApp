@@ -77,6 +77,6 @@ class HabitListAdapter(
 
     override fun onBindViewHolder(holder: HabitListViewHolder, position: Int) {
         holder.bind(habits[position])
-        holder.itemView.setOnClickListener {clickListener(habits[position], position)}
+        holder.itemView.setOnClickListener { clickListener(habits[position], position) }
     }
 }

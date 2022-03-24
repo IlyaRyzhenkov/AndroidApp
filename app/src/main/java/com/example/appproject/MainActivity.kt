@@ -1,85 +1,113 @@
 package com.example.appproject
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.Objects
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import com.example.appproject.fragments.*
+import com.google.android.material.navigation.NavigationView
 
-class MainActivity : Activity() {
-    private lateinit var habitListView: RecyclerView
-    private var habits: ArrayList<Habit> = arrayListOf()
-    private var habitsListAdapter = HabitListAdapter(habits, this::clickItem)
+class MainActivity : AppCompatActivity(), HabitsRepositoryCallback, HabitsEditorCallback, HabitListCallback {
+    lateinit var habitsRepository : HabitsRepositoryFragment
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var drawerToggle: ActionBarDrawerToggle
+    private lateinit var tabFragment: TabFragment
+    private lateinit var editorFragment: HabitsEditorFragment
+    private var appInfoFragment: AppInfoFragment? = null
 
-    companion object {
-        const val HABIT_INTENT_HEADER = "HABIT"
-        const val HABIT_LIST_HEADER = "HABITS"
-        const val HABIT_POSITION_INTENT_HEADER = "HABIT_POSITION"
-
-        const val ACTIVITY_HABIT_EDITOR_REQUEST_CODE = 100
-
-        const val DEFAULT_POSITION_CODE = -1
-    }
+    private val HABIT_REPOSITORY_TAG = "HABIT_REPOSITORY"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        habitListView = findViewById(R.id.habit_list)
-        habitListView.adapter = habitsListAdapter
-        val newHabitFab: FloatingActionButton = findViewById(R.id.new_habit_button)
-        newHabitFab.setOnClickListener { openEditActivity(null, DEFAULT_POSITION_CODE) }
-        habitListView
-    }
+        if (savedInstanceState == null) {
+            habitsRepository = HabitsRepositoryFragment.newInstance()
+            tabFragment = TabFragment.newInstance()
+            supportFragmentManager.beginTransaction()
+                .add(habitsRepository, HABIT_REPOSITORY_TAG)
+                .add(R.id.fragment_layout, tabFragment)
+                .commit()
+        }
+        drawerLayout = findViewById(R.id.main_layout)
+        drawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.menu_open, R.string.menu_close)
+        drawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(HABIT_LIST_HEADER, habits)
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        habits = savedInstanceState.getParcelableArrayList(HABIT_LIST_HEADER) ?: arrayListOf()
-        habitsListAdapter = HabitListAdapter(habits, this::clickItem)
-        habitListView.adapter = habitsListAdapter
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == ACTIVITY_HABIT_EDITOR_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                if (data != null) {
-                    val habit: Habit? = data.getParcelableExtra(HABIT_INTENT_HEADER)
-                    val position = data.getIntExtra(HABIT_POSITION_INTENT_HEADER, DEFAULT_POSITION_CODE)
-                    if (habit != null) {
-                        if (position != DEFAULT_POSITION_CODE) {
-                            habits[position] = habit
-                            habitsListAdapter.notifyItemChanged(position)
-                        } else {
-                            habits.add(habit)
-                            habitsListAdapter.notifyItemInserted(habits.size)
-                        }
-                    }
-                }
+        val navView = findViewById<NavigationView>(R.id.navigation_view)
+        navView.setNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.menu_habits -> menuHabitsClicked()
+                R.id.menu_app_info -> menuAppInfoClicked()
+                else -> throw IllegalArgumentException("Wrong menu item id ${it.itemId}")
             }
+            true
         }
     }
 
-    private fun openEditActivity(habit: Habit?, position: Int) {
-        val sendIntent = Intent(this, HabitEditionActivity::class.java)
-            .apply {
-                val bundle = Bundle().apply {
-                    putParcelable(HABIT_INTENT_HEADER, habit)
-                    putInt(HABIT_POSITION_INTENT_HEADER, position)
-                }
-                putExtras(bundle)
-            }
-        startActivityForResult(sendIntent, ACTIVITY_HABIT_EDITOR_REQUEST_CODE)
+    override fun onHabitCreated(habit: Habit, position: Int) {
+        habitsRepository.insertHabit(habit, position)
+        startHabitsLists()
     }
 
-    private fun clickItem(habit: Habit, position: Int) {
-        openEditActivity(habit, position)
+    override fun onHabitEdited(oldHabit: Habit, newHabit: Habit, oldPosition: Int) {
+        habitsRepository.changeHabit(oldHabit, newHabit, oldPosition)
+        startHabitsLists()
+    }
+
+    override fun onHabitInserted(habit: Habit, position: Int) {
+        tabFragment.notifyItemInserted(habit, position)
+    }
+
+    override fun onHabitChanged(habit: Habit, position: Int) {
+        tabFragment.notifyItemChanged(habit, position)
+    }
+
+    override fun onHabitDeleted(habit: Habit, position: Int) {
+        tabFragment.notifyItemDeleted(habit, position)
+    }
+
+    override fun onItemClicked(habit: Habit, position: Int) {
+        startEditorFragment(habit, position)
+    }
+
+    override fun onNewHabitButtonClicked(positionToAdd: Int) {
+        startEditorFragment(position = positionToAdd)
+    }
+
+    private fun startEditorFragment(habit: Habit? = null, position: Int) {
+        editorFragment = HabitsEditorFragment.newInstance(habit, position)
+        supportFragmentManager.beginTransaction()
+            .hide(tabFragment)
+            .add(R.id.fragment_layout, editorFragment)
+            .commit()
+    }
+
+    private fun startHabitsLists() {
+        tabFragment
+        supportFragmentManager.beginTransaction()
+            .remove(editorFragment)
+            .show(tabFragment)
+            .commit()
+    }
+
+    private fun menuHabitsClicked() {
+        val transaction = supportFragmentManager.beginTransaction()
+            .show(tabFragment)
+        if (appInfoFragment != null) {
+            transaction.remove(appInfoFragment!!)
+        }
+        transaction.commit()
+    }
+
+    private fun menuAppInfoClicked() {
+        val transaction = supportFragmentManager.beginTransaction()
+        if (appInfoFragment == null) {
+            appInfoFragment = AppInfoFragment.newInstance()
+            transaction.add(R.id.fragment_layout, appInfoFragment!!)
+        } else {
+            transaction.show(appInfoFragment!!)
+        }
+        transaction.hide(tabFragment).commit()
     }
 }
