@@ -65,7 +65,7 @@ class HabitListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 class HabitListAdapter(
-    private val habits: MutableList<Habit>,
+    var habits: List<Habit>,
     private val clickListener: (Habit, Int) -> Unit
 ) : RecyclerView.Adapter<HabitListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitListViewHolder {

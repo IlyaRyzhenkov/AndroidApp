@@ -1,5 +1,6 @@
 package com.example.appproject.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
@@ -11,9 +12,13 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.appproject.Habit
 import com.example.appproject.HabitType
+import com.example.appproject.HabitsRepository
 import com.example.appproject.R
+import com.example.appproject.viewModels.HabitEditorViewModel
 
 enum class RadiobuttonsToHabitTypes(val id: Int, val type: HabitType) {
     GOOD_BUTTON(R.id.goodHabitButton, HabitType.GOOD),
@@ -38,11 +43,14 @@ enum class RadiobuttonsToHabitTypes(val id: Int, val type: HabitType) {
     }
 }
 
-class HabitsEditorFragment(val habit: Habit?, val position: Int) : Fragment() {
+class HabitsEditorFragment : Fragment() {
+    private lateinit var editViewModel: HabitEditorViewModel
     var callback: HabitsEditorCallback? = null
 
-    private lateinit var res: Resources
+    var habit: Habit? = null
+    var position: Int = 0
 
+    private lateinit var res: Resources
     private lateinit var habitNameEditTextView: TextView
     private lateinit var habitDescriptionEditTextView: TextView
     private lateinit var habitPrioritySeekBar: SeekBar
@@ -54,10 +62,40 @@ class HabitsEditorFragment(val habit: Habit?, val position: Int) : Fragment() {
 
     private var habitColor: Int = 0XFF00FFFF.toInt()
 
+    @SuppressLint("StaticFieldLeak")
     companion object {
+        private val HABIT_BUNDLE = "HABIT"
+        private val POSITION_BUNDLE = "POSITION"
+
+        @SuppressLint("StaticFieldLeak")
+        var INSTANCE: HabitsEditorFragment? = null
+
         fun newInstance(habit: Habit?, position: Int) : HabitsEditorFragment {
-            return HabitsEditorFragment(habit, position)
+            val fragment = HabitsEditorFragment()
+            val bundle = Bundle().apply {
+                putParcelable(HABIT_BUNDLE, habit)
+                putInt(POSITION_BUNDLE, position)
+            }
+            fragment.arguments = bundle
+            return fragment
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        habit = arguments!!.getParcelable(HABIT_BUNDLE)
+        position = arguments!!.getInt(POSITION_BUNDLE)
+        editViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return HabitEditorViewModel(HabitsRepository) as T
+            }
+        }).get(HabitEditorViewModel::class.java)
+        INSTANCE = this
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callback = activity as HabitsEditorCallback
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -74,18 +112,13 @@ class HabitsEditorFragment(val habit: Habit?, val position: Int) : Fragment() {
         habitPeriodEditTextView = view.findViewById(R.id.editTextHabitPeriod)
         habitCounterEditTextView = view.findViewById(R.id.editTextHabitCounter)
         initColorPicker(view)
-        if (habit != null) {
-            setUpWithHabit(habit)
-        }
+        habit?.let { setUpWithHabit(it, position) }
         view.findViewById<Button>(R.id.HabitCreateButton).setOnClickListener { onButtonClick() }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        callback = activity as HabitsEditorCallback
-    }
-
-    private fun setUpWithHabit(habit: Habit) {
+    fun setUpWithHabit(habit: Habit, position: Int) {
+        this.position = position
+        this.habit = habit
         habitNameEditTextView.text = habit.name
         habitDescriptionEditTextView.text = habit.description
         habitPrioritySeekBar.progress = habit.priority
@@ -112,8 +145,9 @@ class HabitsEditorFragment(val habit: Habit?, val position: Int) : Fragment() {
 
     private fun onButtonClick() {
         val newHabit = createHabitFromViews()
+        editViewModel.onCreateButtonClick(habit, newHabit, position)
         if (habit != null) {
-            callback?.onHabitEdited(habit, newHabit, position)
+            callback?.onHabitEdited(habit!!, newHabit, position)
         } else {
             callback?.onHabitCreated(newHabit, position)
         }

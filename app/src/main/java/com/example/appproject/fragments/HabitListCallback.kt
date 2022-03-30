@@ -4,5 +4,4 @@ import com.example.appproject.Habit
 
 interface HabitListCallback {
     fun onItemClicked(habit: Habit, position : Int)
-    fun onNewHabitButtonClicked(positionToAdd: Int)
 }

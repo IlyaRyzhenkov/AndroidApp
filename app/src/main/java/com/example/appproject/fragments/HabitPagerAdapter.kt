@@ -1,14 +1,13 @@
 package com.example.appproject.fragments
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.appproject.HabitType
 
-class HabitPagerAdapter(activity: AppCompatActivity, habitRepository: HabitsRepositoryFragment) : FragmentStateAdapter(activity) {
-    private val goodHabitFragment = HabitListFragment.newInstansce(HabitType.GOOD, habitRepository.getHabitsByType(HabitType.GOOD))
-    private val badHabitFragment = HabitListFragment.newInstansce(HabitType.BAD, habitRepository.getHabitsByType(HabitType.BAD))
+class HabitPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
+    private val goodHabitFragment = HabitListFragment.newInstansce(HabitType.GOOD)
+    private val badHabitFragment = HabitListFragment.newInstansce(HabitType.BAD)
 
     override fun getItemCount(): Int = 2
 
@@ -22,4 +21,9 @@ class HabitPagerAdapter(activity: AppCompatActivity, habitRepository: HabitsRepo
             HabitType.GOOD -> goodHabitFragment
             HabitType.BAD -> badHabitFragment
         }
+
+    fun setNameFilter(nameFilter: String) {
+        goodHabitFragment.setNameFilter(nameFilter)
+        badHabitFragment.setNameFilter(nameFilter)
+    }
 }

@@ -1,32 +1,34 @@
 package com.example.appproject
 
 import android.os.Bundle
+import android.view.View
+import android.widget.EditText
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.doOnTextChanged
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.appproject.fragments.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity(), HabitsRepositoryCallback, HabitsEditorCallback, HabitListCallback {
-    lateinit var habitsRepository : HabitsRepositoryFragment
+class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallback {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var tabFragment: TabFragment
     private lateinit var editorFragment: HabitsEditorFragment
     private var appInfoFragment: AppInfoFragment? = null
 
-    private val HABIT_REPOSITORY_TAG = "HABIT_REPOSITORY"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.bottom_sheet_wrapper)
         if (savedInstanceState == null) {
-            habitsRepository = HabitsRepositoryFragment.newInstance()
             tabFragment = TabFragment.newInstance()
             supportFragmentManager.beginTransaction()
-                .add(habitsRepository, HABIT_REPOSITORY_TAG)
                 .add(R.id.fragment_layout, tabFragment)
                 .commit()
+        } else {
+            tabFragment = TabFragment.INSTANCE!!
         }
         drawerLayout = findViewById(R.id.main_layout)
         drawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.menu_open, R.string.menu_close)
@@ -43,52 +45,50 @@ class MainActivity : AppCompatActivity(), HabitsRepositoryCallback, HabitsEditor
             }
             true
         }
+        findViewById<FloatingActionButton>(R.id.new_habit_button).apply { setOnClickListener { onNewHabitButtonClicked() } }
+        findViewById<ConstraintLayout>(R.id.bottom_sheet).findViewById<EditText>(R.id.bottom_sheet_filter_name_editor)
+            .doOnTextChanged { text, _, _, _ -> onNameFilterSet(text.toString()) }
     }
 
     override fun onHabitCreated(habit: Habit, position: Int) {
-        habitsRepository.insertHabit(habit, position)
         startHabitsLists()
     }
 
     override fun onHabitEdited(oldHabit: Habit, newHabit: Habit, oldPosition: Int) {
-        habitsRepository.changeHabit(oldHabit, newHabit, oldPosition)
         startHabitsLists()
-    }
-
-    override fun onHabitInserted(habit: Habit, position: Int) {
-        tabFragment.notifyItemInserted(habit, position)
-    }
-
-    override fun onHabitChanged(habit: Habit, position: Int) {
-        tabFragment.notifyItemChanged(habit, position)
-    }
-
-    override fun onHabitDeleted(habit: Habit, position: Int) {
-        tabFragment.notifyItemDeleted(habit, position)
     }
 
     override fun onItemClicked(habit: Habit, position: Int) {
         startEditorFragment(habit, position)
     }
 
-    override fun onNewHabitButtonClicked(positionToAdd: Int) {
-        startEditorFragment(position = positionToAdd)
+    private fun onNewHabitButtonClicked() {
+        startEditorFragment()
     }
 
-    private fun startEditorFragment(habit: Habit? = null, position: Int) {
-        editorFragment = HabitsEditorFragment.newInstance(habit, position)
+    private fun startEditorFragment(habit: Habit? = null, position: Int = 0) {
+        hideBottomSheet()
+        editorFragment = if (HabitsEditorFragment.INSTANCE == null) {
+            HabitsEditorFragment.newInstance(habit, position)
+        } else {
+            HabitsEditorFragment.INSTANCE!!
+        }
         supportFragmentManager.beginTransaction()
             .hide(tabFragment)
             .add(R.id.fragment_layout, editorFragment)
-            .commit()
+            .commitNow()
+        if (habit != null) {
+            editorFragment.setUpWithHabit(habit, position)
+        }
     }
 
     private fun startHabitsLists() {
-        tabFragment
+        editorFragment = HabitsEditorFragment.INSTANCE!!
         supportFragmentManager.beginTransaction()
             .remove(editorFragment)
             .show(tabFragment)
             .commit()
+        showBottomSheet()
     }
 
     private fun menuHabitsClicked() {
@@ -109,5 +109,19 @@ class MainActivity : AppCompatActivity(), HabitsRepositoryCallback, HabitsEditor
             transaction.show(appInfoFragment!!)
         }
         transaction.hide(tabFragment).commit()
+    }
+
+    private fun hideBottomSheet() {
+        findViewById<ConstraintLayout>(R.id.bottom_sheet).visibility = View.INVISIBLE
+        findViewById<FloatingActionButton>(R.id.new_habit_button).visibility = View.INVISIBLE
+    }
+
+    private fun showBottomSheet() {
+        findViewById<ConstraintLayout>(R.id.bottom_sheet).visibility = View.VISIBLE
+        findViewById<FloatingActionButton>(R.id.new_habit_button).visibility = View.VISIBLE
+    }
+
+    private fun onNameFilterSet(nameFilter: String) {
+        tabFragment.setNameFiler(nameFilter)
     }
 }

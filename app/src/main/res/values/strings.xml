@@ -40,7 +40,11 @@
 
     <!-- Strings in App info -->
     <string name="app_info_header">Информация о приложении</string>
-    <string name="app_info_version">Версия: 2</string>
+    <string name="app_info_version">Версия: 3</string>
     <string name="app_info_author">Автор: Рыженков Илья</string>
+
+    <!-- Strings in bottom sheet -->
+    <string name="bottom_sheet_header">Фильтры</string>
+    <string name="bottom_sheet_name_filter">Фильтровать по имени:</string>
 
 </resources>
