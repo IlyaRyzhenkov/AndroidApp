@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallbac
         super.onCreate(savedInstanceState)
         setContentView(R.layout.bottom_sheet_wrapper)
         if (savedInstanceState == null) {
+            HabitsRepository(applicationContext, this)
             tabFragment = TabFragment.newInstance()
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_layout, tabFragment)
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallbac
             when(it.itemId) {
                 R.id.menu_habits -> menuHabitsClicked()
                 R.id.menu_app_info -> menuAppInfoClicked()
+                R.id.menu_clear_habits -> menuClearHabitsClicked()
                 else -> throw IllegalArgumentException("Wrong menu item id ${it.itemId}")
             }
             true
@@ -79,6 +81,8 @@ class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallbac
             .commitNow()
         if (habit != null) {
             editorFragment.setUpWithHabit(habit, position)
+        } else {
+            editorFragment.setUpWithoutHabit()
         }
     }
 
@@ -123,5 +127,9 @@ class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallbac
 
     private fun onNameFilterSet(nameFilter: String) {
         tabFragment.setNameFiler(nameFilter)
+    }
+
+    private fun menuClearHabitsClicked() {
+        HabitsRepository.clearHabits()
     }
 }

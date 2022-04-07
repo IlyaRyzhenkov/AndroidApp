@@ -1,55 +1,51 @@
 package com.example.appproject
 
-import com.example.appproject.viewModels.HabitListObserverViewModel
+import android.content.Context
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.room.Room
+import com.example.appproject.database.HabitConverter
+import com.example.appproject.database.HabitDatabase
+import com.example.appproject.database.entities.DbHabit
 
 object HabitsRepository {
-    private val habits: ArrayList<Habit> = arrayListOf()
-    private val viewModels: ArrayList<HabitListObserverViewModel> = arrayListOf()
+    private lateinit var habitDatabase: HabitDatabase
+    private lateinit var dbHabitsLiveData: LiveData<List<DbHabit>>
+    val habits: MutableLiveData<List<Habit>> = MutableLiveData()
 
-    fun getHabits(typeFilter: HabitType?=null, nameFilter: String=""): List<Habit> {
-        val filteredByType = if (typeFilter != null) {
-           habits.filter { habit -> habit.type == typeFilter }
-        } else {
-            habits
-        }
-        val filteredByName = if (nameFilter != "") {
-            filteredByType.filter { habit -> habit.name.contains(nameFilter, ignoreCase = true) }
-        } else {
-            filteredByType
-        }
-        return filteredByName
+    operator fun invoke(context: Context, lifecycleOwner: LifecycleOwner) : HabitsRepository {
+        habitDatabase = Room.databaseBuilder(context, HabitDatabase::class.java, "habitDatabase")
+            .allowMainThreadQueries().build()
+        dbHabitsLiveData = habitDatabase.habitsDAO().getAllHabits()
+        dbHabitsLiveData.observe(lifecycleOwner) { dbHabits -> handleHabitsUpdateFromDb(dbHabits) }
+        return this
     }
 
     fun getHabitsCount(): Int {
-        return habits.size
+        return habits.value?.size ?: 0
     }
 
     fun addHabit(habit: Habit) {
-        habits.add(habit)
-        for (viewModel in viewModels) {
-            viewModel.onItemAdded(habit)
-        }
+        val dbHabit = HabitConverter.habitToDbHabit(habit)
+        habitDatabase.habitsDAO().insertHabit(dbHabit)
     }
 
-    fun removeHabit(position: Int) {
-        habits.removeAt(position)
-        for (viewModel in viewModels) {
-            viewModel.onItemRemoved(position)
-        }
+    fun removeHabit(habit: Habit) {
+        val dbHabit = HabitConverter.habitToDbHabit(habit)
+        habitDatabase.habitsDAO().deleteHabit(dbHabit)
     }
 
-    fun changeHabit(oldHabit: Habit, newHabit: Habit, position: Int) {
-        habits[position] = newHabit
-        for (viewModel in viewModels) {
-            viewModel.onItemChanged(oldHabit, newHabit, position)
-        }
+    fun changeHabit(newHabit: Habit) {
+        val dbHabit = HabitConverter.habitToDbHabit(newHabit)
+        habitDatabase.habitsDAO().updateHabit(dbHabit)
     }
 
-    fun subscribe(viewModel: HabitListObserverViewModel) {
-        viewModels.add(viewModel)
+    fun clearHabits() {
+        habitDatabase.habitsDAO().clear()
     }
 
-    fun unsubscribe(viewModel: HabitListObserverViewModel) {
-        viewModels.remove(viewModel)
+    private fun handleHabitsUpdateFromDb(dbHabits: List<DbHabit>) {
+        habits.value = dbHabits.map(HabitConverter::dbHabitToHabit).toList()
     }
 }

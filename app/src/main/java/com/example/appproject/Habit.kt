@@ -1,17 +1,28 @@
 package com.example.appproject
 
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-enum class HabitType(val repr: String, val color: Int) {
-    GOOD("Good", Color.GREEN),
-    BAD("Bad", Color.RED)
+enum class HabitType(val repr: String, val typeId: Int) {
+    GOOD("Good", 1),
+    BAD("Bad", 2);
+
+    companion object {
+        fun gettypeByTypeId(typeId: Int) : HabitType {
+            for (type in values()) {
+                if (type.typeId == typeId) {
+                    return type
+                }
+            }
+            throw IllegalArgumentException("Can`t find HabitType for typeId = $typeId")
+        }
+    }
 }
 
 @Parcelize
 class Habit(
+    var id: Long,
     var name: String,
     var description: String,
     var priority: Int,

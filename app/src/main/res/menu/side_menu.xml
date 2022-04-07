@@ -3,4 +3,5 @@
 
     <item android:title="@string/menu_item_text_habits" android:id="@+id/menu_habits"/>
     <item android:title="@string/menu_item_text_info" android:id="@+id/menu_app_info"/>
+    <item android:title="@string/menu_item_clear_habits" android:id="@+id/menu_clear_habits"/>
 </menu>

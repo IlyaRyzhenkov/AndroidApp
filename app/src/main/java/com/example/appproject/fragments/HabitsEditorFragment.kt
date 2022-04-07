@@ -18,11 +18,13 @@ import com.example.appproject.Habit
 import com.example.appproject.HabitType
 import com.example.appproject.HabitsRepository
 import com.example.appproject.R
+import com.example.appproject.viewModels.CreateButtonClickMode
 import com.example.appproject.viewModels.HabitEditorViewModel
 
 enum class RadiobuttonsToHabitTypes(val id: Int, val type: HabitType) {
     GOOD_BUTTON(R.id.goodHabitButton, HabitType.GOOD),
     BAD_BUTTON(R.id.badHabitButton, HabitType.BAD);
+
     companion object {
         fun getTypeById(id: Int) : HabitType {
             for (button in values()) {
@@ -131,8 +133,23 @@ class HabitsEditorFragment : Fragment() {
         view?.findViewById<TextView>(R.id.habitEditHeader)?.text = getString(R.string.habit_edit_header_text)
     }
 
+    fun setUpWithoutHabit() {
+        this.habit = null
+        this.position = -1
+        habitNameEditTextView.text = res.getString(R.string.habit_name_default_value)
+        habitDescriptionEditTextView.text = res.getString(R.string.habit_descr_default_value)
+        habitPrioritySeekBar.progress = 0
+        habitTypeRadioGroup.check(RadiobuttonsToHabitTypes.getIdByType(HabitType.GOOD))
+        habitPeriodEditTextView.text = res.getString(R.string.habit_period_default_value)
+        habitCounterEditTextView.text = res.getString(R.string.habit_counter_default_value)
+        onClickColorPicker(res.getColor(R.color.color1))
+        view?.findViewById<Button>(R.id.HabitCreateButton)?.text = res.getString(R.string.habit_create_button_text)
+        view?.findViewById<TextView>(R.id.habitEditHeader)?.text = res.getString(R.string.habit_creation_header_text)
+    }
+
     private fun createHabitFromViews() : Habit {
         return Habit(
+            id = habit?.id ?: -1,
             name = habitNameEditTextView.text.toString(),
             description = habitDescriptionEditTextView.text.toString(),
             priority = habitPrioritySeekBar.progress,
@@ -145,7 +162,11 @@ class HabitsEditorFragment : Fragment() {
 
     private fun onButtonClick() {
         val newHabit = createHabitFromViews()
-        editViewModel.onCreateButtonClick(habit, newHabit, position)
+        if (habit != null) {
+            editViewModel.onCreateButtonClick(habit, newHabit, CreateButtonClickMode.CHANGE_HABIT)
+        } else {
+            editViewModel.onCreateButtonClick(habit, newHabit, CreateButtonClickMode.ADD_HABIT)
+        }
         if (habit != null) {
             callback?.onHabitEdited(habit!!, newHabit, position)
         } else {

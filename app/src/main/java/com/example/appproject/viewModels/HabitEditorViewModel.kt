@@ -4,17 +4,18 @@ import androidx.lifecycle.ViewModel
 import com.example.appproject.Habit
 import com.example.appproject.HabitsRepository
 
+enum class CreateButtonClickMode {
+    CHANGE_HABIT,
+    DELETE_HABIT,
+    ADD_HABIT;
+}
+
 class HabitEditorViewModel(private val habitsRepository: HabitsRepository) : ViewModel() {
-    fun onCreateButtonClick(oldHabit: Habit?, newHabit: Habit?, position: Int) {
-        if (oldHabit != null && newHabit != null) {
-            changeHabit(oldHabit, newHabit, position)
-        } else if (oldHabit == null && newHabit == null) {
-            deleteHabit(position)
-        } else if (oldHabit == null && newHabit != null) {
-            addHabit(newHabit)
-        } else {
-            throw IllegalArgumentException("Can`t find correct action for arguments oldHabit=$oldHabit, " +
-                    "newHabit=$newHabit, position=$position")
+    fun onCreateButtonClick(oldHabit: Habit?, newHabit: Habit, mode: CreateButtonClickMode) {
+        when(mode) {
+            CreateButtonClickMode.CHANGE_HABIT -> changeHabit(newHabit)
+            CreateButtonClickMode.DELETE_HABIT -> deleteHabit(oldHabit)
+            CreateButtonClickMode.ADD_HABIT -> addHabit(newHabit)
         }
     }
 
@@ -22,11 +23,13 @@ class HabitEditorViewModel(private val habitsRepository: HabitsRepository) : Vie
         habitsRepository.addHabit(habit)
     }
 
-    private fun deleteHabit(position: Int) {
-        habitsRepository.removeHabit(position)
+    private fun deleteHabit(habit: Habit?) {
+        if (habit != null) {
+            habitsRepository.removeHabit(habit)
+        }
     }
 
-    private fun changeHabit(oldHabit: Habit, newHabit: Habit, position: Int) {
-        habitsRepository.changeHabit(oldHabit, newHabit, position)
+    private fun changeHabit(newHabit: Habit) {
+        habitsRepository.changeHabit(newHabit)
     }
 }

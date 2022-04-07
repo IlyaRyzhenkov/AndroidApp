@@ -37,9 +37,10 @@ class HabitListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         habitType = arguments!!.getEnum(HABIT_TYPE_BUNDLE, HabitType.BAD)
+        val fragment = this
         habitsListViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return HabitListViewModel(HabitsRepository, habitType, nameFilter) as T
+                return HabitListViewModel(HabitsRepository, habitType, nameFilter, fragment) as T
             }
         }).get(HabitListViewModel::class.java)
     }

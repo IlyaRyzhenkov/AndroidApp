@@ -37,6 +37,7 @@
     <string name="menu_close">Закрыть</string>
     <string name="menu_item_text_habits">Привычки</string>
     <string name="menu_item_text_info">Информация о приложении</string>
+    <string name="menu_item_clear_habits">Отчистить привычки</string>
 
     <!-- Strings in App info -->
     <string name="app_info_header">Информация о приложении</string>
