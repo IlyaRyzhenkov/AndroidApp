@@ -3,6 +3,8 @@ package com.example.appproject.viewModels
 import androidx.lifecycle.ViewModel
 import com.example.appproject.Habit
 import com.example.appproject.HabitsRepository
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 enum class CreateButtonClickMode {
     CHANGE_HABIT,
@@ -10,7 +12,11 @@ enum class CreateButtonClickMode {
     ADD_HABIT;
 }
 
-class HabitEditorViewModel(private val habitsRepository: HabitsRepository) : ViewModel() {
+class HabitEditorViewModel(private val habitsRepository: HabitsRepository) : ViewModel(), CoroutineScope {
+    private val job = SupervisorJob()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job + CoroutineExceptionHandler { _, e -> throw e }
+
     fun onCreateButtonClick(oldHabit: Habit?, newHabit: Habit, mode: CreateButtonClickMode) {
         when(mode) {
             CreateButtonClickMode.CHANGE_HABIT -> changeHabit(newHabit)
@@ -20,16 +26,21 @@ class HabitEditorViewModel(private val habitsRepository: HabitsRepository) : Vie
     }
 
     private fun addHabit(habit: Habit) {
-        habitsRepository.addHabit(habit)
+        launch { withContext(Dispatchers.IO) { habitsRepository.addHabit(habit) } }
     }
 
     private fun deleteHabit(habit: Habit?) {
         if (habit != null) {
-            habitsRepository.removeHabit(habit)
+            launch { withContext(Dispatchers.IO) {habitsRepository.removeHabit(habit)} }
         }
     }
 
     private fun changeHabit(newHabit: Habit) {
-        habitsRepository.changeHabit(newHabit)
+        launch { withContext(Dispatchers.IO) {habitsRepository.changeHabit(newHabit)} }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        coroutineContext.cancelChildren()
     }
 }

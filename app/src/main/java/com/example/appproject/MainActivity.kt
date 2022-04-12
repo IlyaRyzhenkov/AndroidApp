@@ -11,6 +11,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.example.appproject.fragments.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallback {
     private lateinit var drawerLayout: DrawerLayout
@@ -130,6 +133,6 @@ class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallbac
     }
 
     private fun menuClearHabitsClicked() {
-        HabitsRepository.clearHabits()
+        GlobalScope.launch(Dispatchers.IO) { HabitsRepository.clearHabits() }
     }
 }
