@@ -3,6 +3,7 @@ package com.example.appproject.database
 import com.example.appproject.Habit
 import com.example.appproject.HabitType
 import com.example.appproject.database.entities.DbHabit
+import java.time.Instant
 
 object HabitConverter {
     fun dbHabitToHabit(dbHabit: DbHabit) : Habit {
@@ -10,11 +11,13 @@ object HabitConverter {
             id = dbHabit.id ?: -1,
             name = dbHabit.name,
             description = dbHabit.description,
-            type = HabitType.gettypeByTypeId(dbHabit.type),
+            type = HabitType.getTypeByTypeId(dbHabit.type),
             priority = dbHabit.priority,
             period = dbHabit.period,
             counter = dbHabit.counter,
             color = dbHabit.intColor,
+            date = Instant.ofEpochSecond(0),
+            uid = dbHabit.uid,
         )
     }
 
@@ -28,6 +31,8 @@ object HabitConverter {
             period = habit.period,
             counter = habit.counter,
             intColor = habit.color,
+            uid = habit.uid,
+            date = habit.date.epochSecond,
         )
     }
 }

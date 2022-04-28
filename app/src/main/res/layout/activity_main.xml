@@ -13,6 +13,7 @@
     <com.google.android.material.navigation.NavigationView
             android:layout_width="wrap_content"
             android:layout_height="match_parent" app:menu="@menu/side_menu" app:layout_constraintTop_toTopOf="parent"
+            app:headerLayout="@layout/nav_header_layout"
             app:layout_constraintStart_toStartOf="parent" android:id="@+id/navigation_view"
             android:layout_gravity="start" android:fitsSystemWindows="true"/>
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -5,21 +5,22 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.appproject.Habit
-import com.example.appproject.HabitType
-import com.example.appproject.HabitsRepository
-import com.example.appproject.R
+import com.example.appproject.*
+import com.example.appproject.remote.habit.service.RemoteHabitRepository
 import com.example.appproject.viewModels.CreateButtonClickMode
 import com.example.appproject.viewModels.HabitEditorViewModel
+import java.time.Instant
 
 enum class RadiobuttonsToHabitTypes(val id: Int, val type: HabitType) {
     GOOD_BUTTON(R.id.goodHabitButton, HabitType.GOOD),
@@ -89,7 +90,7 @@ class HabitsEditorFragment : Fragment() {
         position = arguments!!.getInt(POSITION_BUNDLE)
         editViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return HabitEditorViewModel(HabitsRepository) as T
+                return HabitEditorViewModel(SyncRepository(HabitsRepository, RemoteHabitRepository)) as T
             }
         }).get(HabitEditorViewModel::class.java)
         INSTANCE = this
@@ -147,6 +148,7 @@ class HabitsEditorFragment : Fragment() {
         view?.findViewById<TextView>(R.id.habitEditHeader)?.text = res.getString(R.string.habit_creation_header_text)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun createHabitFromViews() : Habit {
         return Habit(
             id = habit?.id ?: -1,
@@ -156,7 +158,9 @@ class HabitsEditorFragment : Fragment() {
             type = RadiobuttonsToHabitTypes.getTypeById(habitTypeRadioGroup.checkedRadioButtonId),
             period = habitPeriodEditTextView.text.toString().toInt(),
             counter = habitCounterEditTextView.text.toString().toInt(),
-            color = habitColor
+            color = habitColor,
+            date = Instant.now(),
+            uid = null,
         )
     }
 

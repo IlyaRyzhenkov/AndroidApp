@@ -3,5 +3,7 @@
 
     <item android:title="@string/menu_item_text_habits" android:id="@+id/menu_habits"/>
     <item android:title="@string/menu_item_text_info" android:id="@+id/menu_app_info"/>
-    <item android:title="@string/menu_item_clear_habits" android:id="@+id/menu_clear_habits"/>
+    <item android:title="@string/menu_item_clear_habits_local" android:id="@+id/menu_clear_habits_local"/>
+    <item android:title="@string/menu_item_clear_habits_remote" android:id="@+id/menu_clear_habits_remote"/>
+    <item android:title="@string/menu_item_sync_habits" android:id="@+id/menu_sync_habits"/>
 </menu>

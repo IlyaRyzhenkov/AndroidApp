@@ -5,6 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
+import com.example.appproject.database.DatabaseMigrations
 import com.example.appproject.database.HabitConverter
 import com.example.appproject.database.HabitDatabase
 import com.example.appproject.database.entities.DbHabit
@@ -16,7 +17,8 @@ object HabitsRepository {
 
     operator fun invoke(context: Context, lifecycleOwner: LifecycleOwner) : HabitsRepository {
         habitDatabase = Room.databaseBuilder(context, HabitDatabase::class.java, "habitDatabase")
-            .allowMainThreadQueries().build()
+            .addMigrations(DatabaseMigrations.MIGRATION_1_2, DatabaseMigrations.MIGRATION_2_3)
+            .build()
         dbHabitsLiveData = habitDatabase.habitsDAO().getAllHabits()
         dbHabitsLiveData.observe(lifecycleOwner) { dbHabits -> handleHabitsUpdateFromDb(dbHabits) }
         return this
@@ -26,22 +28,28 @@ object HabitsRepository {
         return habits.value?.size ?: 0
     }
 
-    fun addHabit(habit: Habit) {
-        val dbHabit = HabitConverter.habitToDbHabit(habit)
-        habitDatabase.habitsDAO().insertHabit(dbHabit)
+    suspend fun getHabitUidById(id: Long): String? {
+        val kek = habitDatabase.habitsDAO().getHabitById(id)
+        return kek.uid
     }
 
-    fun removeHabit(habit: Habit) {
+    suspend fun addHabit(habit: Habit): Long {
+        val dbHabit = HabitConverter.habitToDbHabit(habit)
+        return habitDatabase.habitsDAO().insertHabit(dbHabit)
+    }
+
+    suspend fun removeHabit(habit: Habit) {
         val dbHabit = HabitConverter.habitToDbHabit(habit)
         habitDatabase.habitsDAO().deleteHabit(dbHabit)
     }
 
-    fun changeHabit(newHabit: Habit) {
+    suspend fun changeHabit(newHabit: Habit) {
         val dbHabit = HabitConverter.habitToDbHabit(newHabit)
-        habitDatabase.habitsDAO().updateHabit(dbHabit)
+        habitDatabase.habitsDAO().deleteHabit(dbHabit)
+        habitDatabase.habitsDAO().insertHabit(dbHabit)
     }
 
-    fun clearHabits() {
+    suspend fun clearHabits() {
         habitDatabase.habitsDAO().clear()
     }
 
