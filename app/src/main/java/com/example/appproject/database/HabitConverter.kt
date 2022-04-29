@@ -16,7 +16,7 @@ object HabitConverter {
             period = dbHabit.period,
             counter = dbHabit.counter,
             color = dbHabit.intColor,
-            date = Instant.ofEpochSecond(0),
+            date = Instant.ofEpochSecond(dbHabit.date),
             uid = dbHabit.uid,
         )
     }
