@@ -1,0 +1,51 @@
+plugins {
+    id "com.android.library"
+    id 'kotlin-android'
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        minSdkVersion 26
+        targetSdkVersion 32
+        versionCode 1
+        versionName '1.0'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_9
+        targetCompatibility JavaVersion.VERSION_1_9
+    }
+}
+
+group 'com.example.data'
+version 'unspecified'
+
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    kapt 'org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.3.0'
+    implementation project(':domain')
+    // implementation project(':domain')
+
+    implementation 'com.google.dagger:dagger:2.28.3'
+    kapt 'com.google.dagger:dagger-compiler:2.28.3'
+
+    // Room database
+    implementation 'androidx.room:room-runtime:2.4.2'
+    annotationProcessor 'androidx.room:room-compiler:2.4.2'
+    implementation 'androidx.room:room-rxjava3:2.4.2'
+    implementation 'androidx.room:room-ktx:2.4.2'
+    kapt 'androidx.room:room-compiler:2.4.2'
+
+    // retrofit + okhttp3
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+    // TODO Удалить, когда сделан переход на Flow
+    implementation 'androidx.lifecycle:lifecycle-livedata-core-ktx:2.3.1'
+}

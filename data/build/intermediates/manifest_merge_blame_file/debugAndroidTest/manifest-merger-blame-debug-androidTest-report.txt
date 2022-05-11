@@ -1,0 +1,43 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.data.test" >
+4
+5    <uses-sdk
+5-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:5:5-74
+6        android:minSdkVersion="26"
+6-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:5:15-41
+7        android:targetSdkVersion="32" />
+7-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:5:42-71
+8
+9    <instrumentation
+9-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:11:5-15:71
+10        android:name="android.test.InstrumentationTestRunner"
+10-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:11:22-75
+11        android:functionalTest="false"
+11-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:14:22-52
+12        android:handleProfiling="false"
+12-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:13:22-53
+13        android:label="Tests for com.example.data.test"
+13-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:15:22-69
+14        android:targetPackage="com.example.data.test" />
+14-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:12:22-67
+15
+16    <application
+16-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:7:5-9:19
+17        android:debuggable="true"
+18        android:extractNativeLibs="false" >
+19        <uses-library android:name="android.test.runner" />
+19-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:8:9-60
+19-->C:\Users\Ilya\IdeaProjects\AndroidApp\data\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest5804495644716933129.xml:8:23-57
+20
+21        <service
+21-->[androidx.room:room-runtime:2.4.2] C:\Users\Ilya\.gradle\caches\transforms-3\a9a46541f4721c15b893c1c9823b657e\transformed\room-runtime-2.4.2\AndroidManifest.xml:25:9-28:40
+22            android:name="androidx.room.MultiInstanceInvalidationService"
+22-->[androidx.room:room-runtime:2.4.2] C:\Users\Ilya\.gradle\caches\transforms-3\a9a46541f4721c15b893c1c9823b657e\transformed\room-runtime-2.4.2\AndroidManifest.xml:26:13-74
+23            android:directBootAware="true"
+23-->[androidx.room:room-runtime:2.4.2] C:\Users\Ilya\.gradle\caches\transforms-3\a9a46541f4721c15b893c1c9823b657e\transformed\room-runtime-2.4.2\AndroidManifest.xml:27:13-43
+24            android:exported="false" />
+24-->[androidx.room:room-runtime:2.4.2] C:\Users\Ilya\.gradle\caches\transforms-3\a9a46541f4721c15b893c1c9823b657e\transformed\room-runtime-2.4.2\AndroidManifest.xml:28:13-37
+25    </application>
+26
+27</manifest>

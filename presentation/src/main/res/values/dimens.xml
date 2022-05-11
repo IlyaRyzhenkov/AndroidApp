@@ -1,0 +1,10 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="color_picker_square_size">120dp</dimen>
+    <dimen name="color_picker_square_horisontal_margin">18dp</dimen>
+    <dimen name="color_picker_height">150dp</dimen>
+    <dimen name="color_picker_layout_verticcal_margin">15dp</dimen>
+
+    <dimen name="bottom_sheet_header_height">40dp</dimen>
+    <dimen name="botton_sheet_name_filter">60dp</dimen>
+</resources>

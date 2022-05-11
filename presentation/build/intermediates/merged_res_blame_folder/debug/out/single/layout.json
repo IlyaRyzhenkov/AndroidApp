@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_main.xml",
+        "source": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\tab_fragment_layout.xml",
+        "source": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\src\\main\\res\\layout\\tab_fragment_layout.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\element_list_fragment.xml",
+        "source": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\src\\main\\res\\layout\\element_list_fragment.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_habit_edition.xml",
+        "source": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\src\\main\\res\\layout\\activity_habit_edition.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\bottom_sheet_wrapper.xml",
+        "source": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\src\\main\\res\\layout\\bottom_sheet_wrapper.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\app_info_layout.xml",
+        "source": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\src\\main\\res\\layout\\app_info_layout.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\habit_list_element.xml",
+        "source": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\src\\main\\res\\layout\\habit_list_element.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\nav_header_layout.xml",
+        "source": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\src\\main\\res\\layout\\nav_header_layout.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\bottom_sheet.xml",
+        "source": "C:\\Users\\Ilya\\IdeaProjects\\AndroidApp\\presentation\\src\\main\\res\\layout\\bottom_sheet.xml"
+    }
+]

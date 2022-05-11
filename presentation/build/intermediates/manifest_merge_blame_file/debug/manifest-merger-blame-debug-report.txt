@@ -1,0 +1,106 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.appproject"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+8-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="32" />
+9-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:5:5-66
+11-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:5:22-64
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:6:5-78
+12-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:6:22-76
+13
+14    <application
+14-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:7:5-25:19
+15        android:allowBackup="true"
+15-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:8:13-39
+16        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+16-->[androidx.core:core:1.7.0] C:\Users\Ilya\.gradle\caches\transforms-3\2a47483d8eeecece1235cdc64fe3facf\transformed\core-1.7.0\AndroidManifest.xml:24:18-86
+17        android:debuggable="true"
+18        android:extractNativeLibs="false"
+19        android:icon="@mipmap/ic_launcher"
+19-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:9:13-47
+20        android:label="@string/app_name"
+20-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:10:13-45
+21        android:roundIcon="@mipmap/ic_launcher_round"
+21-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:11:13-58
+22        android:supportsRtl="true"
+22-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:12:13-39
+23        android:testOnly="true"
+24        android:theme="@style/Theme.AppProject" >
+24-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:13:13-52
+25        <activity
+25-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:14:9-24:20
+26            android:name="com.example.presentation.activities.MainActivity"
+26-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:15:17-56
+27            android:exported="true"
+27-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:16:17-40
+28            android:label="@string/app_name"
+28-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:17:17-49
+29            android:theme="@style/Theme.AppProject.NoActionBar" >
+29-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:18:17-68
+30            <intent-filter>
+30-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:19:13-23:29
+31                <action android:name="android.intent.action.MAIN" />
+31-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:20:17-68
+31-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:20:25-66
+32
+33                <category android:name="android.intent.category.LAUNCHER" />
+33-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:22:17-76
+33-->C:\Users\Ilya\IdeaProjects\AndroidApp\presentation\src\main\AndroidManifest.xml:22:27-74
+34            </intent-filter>
+35        </activity>
+36
+37        <uses-library
+37-->[androidx.window:window:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\3dd61509d4eabd5a1db2ecf79ea9615e\transformed\jetified-window-1.0.0\AndroidManifest.xml:25:9-27:40
+38            android:name="androidx.window.extensions"
+38-->[androidx.window:window:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\3dd61509d4eabd5a1db2ecf79ea9615e\transformed\jetified-window-1.0.0\AndroidManifest.xml:26:13-54
+39            android:required="false" />
+39-->[androidx.window:window:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\3dd61509d4eabd5a1db2ecf79ea9615e\transformed\jetified-window-1.0.0\AndroidManifest.xml:27:13-37
+40        <uses-library
+40-->[androidx.window:window:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\3dd61509d4eabd5a1db2ecf79ea9615e\transformed\jetified-window-1.0.0\AndroidManifest.xml:28:9-30:40
+41            android:name="androidx.window.sidecar"
+41-->[androidx.window:window:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\3dd61509d4eabd5a1db2ecf79ea9615e\transformed\jetified-window-1.0.0\AndroidManifest.xml:29:13-51
+42            android:required="false" />
+42-->[androidx.window:window:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\3dd61509d4eabd5a1db2ecf79ea9615e\transformed\jetified-window-1.0.0\AndroidManifest.xml:30:13-37
+43
+44        <provider
+44-->[androidx.emoji2:emoji2:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\fafa9e3623ac41b3ebf35f052764c43a\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:26:9-34:20
+45            android:name="androidx.startup.InitializationProvider"
+45-->[androidx.emoji2:emoji2:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\fafa9e3623ac41b3ebf35f052764c43a\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:27:13-67
+46            android:authorities="com.example.appproject.androidx-startup"
+46-->[androidx.emoji2:emoji2:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\fafa9e3623ac41b3ebf35f052764c43a\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:28:13-68
+47            android:exported="false" >
+47-->[androidx.emoji2:emoji2:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\fafa9e3623ac41b3ebf35f052764c43a\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:29:13-37
+48            <meta-data
+48-->[androidx.emoji2:emoji2:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\fafa9e3623ac41b3ebf35f052764c43a\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:31:13-33:52
+49                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+49-->[androidx.emoji2:emoji2:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\fafa9e3623ac41b3ebf35f052764c43a\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:32:17-75
+50                android:value="androidx.startup" />
+50-->[androidx.emoji2:emoji2:1.0.0] C:\Users\Ilya\.gradle\caches\transforms-3\fafa9e3623ac41b3ebf35f052764c43a\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:33:17-49
+51            <meta-data
+51-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\Ilya\.gradle\caches\transforms-3\f1f521abc91f67fcfa6a288ca981d2f1\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:31:13-33:52
+52                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+52-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\Ilya\.gradle\caches\transforms-3\f1f521abc91f67fcfa6a288ca981d2f1\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:32:17-78
+53                android:value="androidx.startup" />
+53-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\Ilya\.gradle\caches\transforms-3\f1f521abc91f67fcfa6a288ca981d2f1\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:33:17-49
+54        </provider>
+55
+56        <service
+56-->[androidx.room:room-runtime:2.4.2] C:\Users\Ilya\.gradle\caches\transforms-3\a9a46541f4721c15b893c1c9823b657e\transformed\room-runtime-2.4.2\AndroidManifest.xml:25:9-28:40
+57            android:name="androidx.room.MultiInstanceInvalidationService"
+57-->[androidx.room:room-runtime:2.4.2] C:\Users\Ilya\.gradle\caches\transforms-3\a9a46541f4721c15b893c1c9823b657e\transformed\room-runtime-2.4.2\AndroidManifest.xml:26:13-74
+58            android:directBootAware="true"
+58-->[androidx.room:room-runtime:2.4.2] C:\Users\Ilya\.gradle\caches\transforms-3\a9a46541f4721c15b893c1c9823b657e\transformed\room-runtime-2.4.2\AndroidManifest.xml:27:13-43
+59            android:exported="false" />
+59-->[androidx.room:room-runtime:2.4.2] C:\Users\Ilya\.gradle\caches\transforms-3\a9a46541f4721c15b893c1c9823b657e\transformed\room-runtime-2.4.2\AndroidManifest.xml:28:13-37
+60    </application>
+61
+62</manifest>
