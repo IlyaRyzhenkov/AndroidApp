@@ -18,10 +18,12 @@ import com.example.domain.models.getEnum
 import com.example.domain.models.putEnum
 import com.example.presentation.viewHolders.HabitListAdapter
 import com.example.presentation.viewModels.HabitListViewModel
+import kotlin.coroutines.CoroutineContext
 
 class HabitListFragment : Fragment() {
     private lateinit var habitsRepository: HabitsRepository
     private lateinit var habitsListViewModel: HabitListViewModel
+    private lateinit var coroutineContext: CoroutineContext
     private lateinit var habitType: HabitType
     private var nameFilter: String = ""
 
@@ -33,9 +35,10 @@ class HabitListFragment : Fragment() {
     companion object {
         private val HABIT_TYPE_BUNDLE = "HABIT_TYPE"
 
-        fun newInstansce(habitType: HabitType, habitsRepository: HabitsRepository) : HabitListFragment {
+        fun newInstansce(habitType: HabitType, habitsRepository: HabitsRepository, coroutineContext: CoroutineContext) : HabitListFragment {
             val fragment = HabitListFragment()
             fragment.habitsRepository = habitsRepository
+            fragment.coroutineContext = coroutineContext
             val bundle = Bundle().apply { putEnum(HABIT_TYPE_BUNDLE, habitType) }
             fragment.arguments = bundle
             return fragment
@@ -48,7 +51,7 @@ class HabitListFragment : Fragment() {
         val fragment = this
         habitsListViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return HabitListViewModel(habitsRepository, habitType, nameFilter, fragment) as T
+                return HabitListViewModel(habitsRepository, habitType, nameFilter, fragment, coroutineContext) as T
             }
         }).get(HabitListViewModel::class.java)
     }

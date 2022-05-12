@@ -45,7 +45,4 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-
-    // TODO Удалить, когда сделан переход на Flow
-    implementation 'androidx.lifecycle:lifecycle-livedata-core-ktx:2.3.1'
 }

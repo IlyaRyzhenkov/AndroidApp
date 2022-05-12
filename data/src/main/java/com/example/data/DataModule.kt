@@ -1,7 +1,6 @@
 package com.example.data
 
 import android.content.Context
-import androidx.lifecycle.LifecycleOwner
 import androidx.room.Room
 import com.example.data.database.DatabaseMigrations
 import com.example.data.database.HabitConverter
@@ -25,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class DataModule(private val context: Context, private val lifecycleOwner: LifecycleOwner) {
+class DataModule(private val context: Context) {
     @Provides
     @Singleton
     fun provideRemoteSyncService(localRepository: HabitsRepository, remoteRepository: RemoteHabitRepository): RemoteSyncService {
@@ -42,7 +41,7 @@ class DataModule(private val context: Context, private val lifecycleOwner: Lifec
     @Provides
     @Singleton
     fun provideHabitsRepository(habitDatabase: HabitDatabase, habitConverter: HabitConverter): HabitsRepository {
-        return HabitsRepository(lifecycleOwner, habitDatabase, habitConverter)
+        return HabitsRepository(habitDatabase, habitConverter)
     }
 
     @Provides

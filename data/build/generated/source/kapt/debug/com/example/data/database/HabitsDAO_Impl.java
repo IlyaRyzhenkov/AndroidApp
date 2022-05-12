@@ -1,7 +1,7 @@
 package com.example.data.database;
 
 import android.database.Cursor;
-import androidx.lifecycle.LiveData;
+import androidx.room.CoroutinesRoom;
 import androidx.room.EntityDeletionOrUpdateAdapter;
 import androidx.room.EntityInsertionAdapter;
 import androidx.room.RoomDatabase;
@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import javax.annotation.processing.Generated;
+import kotlinx.coroutines.flow.Flow;
 
 @Generated("androidx.room.RoomProcessor")
 @SuppressWarnings({"unchecked", "deprecation"})
@@ -191,10 +192,10 @@ public final class HabitsDAO_Impl implements HabitsDAO {
   }
 
   @Override
-  public LiveData<List<DbHabit>> getAllHabits() {
+  public Flow<List<DbHabit>> getAllHabits() {
     final String _sql = "SELECT * FROM habits";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
-    return __db.getInvalidationTracker().createLiveData(new String[]{"habits"}, false, new Callable<List<DbHabit>>() {
+    return CoroutinesRoom.createFlow(__db, false, new String[]{"habits"}, new Callable<List<DbHabit>>() {
       @Override
       public List<DbHabit> call() throws Exception {
         final Cursor _cursor = DBUtil.query(__db, _statement, false, null);

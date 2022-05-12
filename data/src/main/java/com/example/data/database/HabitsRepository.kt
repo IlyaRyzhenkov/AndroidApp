@@ -1,24 +1,14 @@
 package com.example.data.database
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.example.data.database.entities.DbHabit
 import com.example.domain.models.Habit
 import com.example.domain.repositories.IHabitsRepository
 import com.example.domain.utils.DateUtils
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class HabitsRepository(lifecycleOwner: LifecycleOwner, private val habitDatabase: HabitDatabase,
+class HabitsRepository(private val habitDatabase: HabitDatabase,
                        private val habitConverter: HabitConverter): IHabitsRepository {
-    private val dbHabitsLiveData: LiveData<List<DbHabit>> = habitDatabase.habitsDAO().getAllHabits()
-    val habits: MutableLiveData<List<Habit>> = MutableLiveData()
-    init {
-        dbHabitsLiveData.observe(lifecycleOwner) { dbHabit -> handleHabitsUpdateFromDb(dbHabit) }
-    }
-
-    fun getHabitsCount(): Int {
-        return habits.value?.size ?: 0
-    }
+    val habitsFlow: Flow<List<Habit>> = habitDatabase.habitsDAO().getAllHabits().map { list -> list.map { dbHabit -> habitConverter.dbHabitToHabit(dbHabit) } }
 
     suspend fun getHabitUidById(id: Long): String? {
         return habitDatabase.habitsDAO().getHabitById(id).uid
@@ -52,9 +42,5 @@ class HabitsRepository(lifecycleOwner: LifecycleOwner, private val habitDatabase
 
     override suspend fun clearHabits() {
         habitDatabase.habitsDAO().clear()
-    }
-
-    private fun handleHabitsUpdateFromDb(dbHabits: List<DbHabit>) {
-        habits.value = dbHabits.map(habitConverter::dbHabitToHabit).toList()
     }
 }

@@ -4,15 +4,16 @@ import com.example.data.database.HabitsRepository
 import com.example.domain.models.Habit
 import com.example.domain.repositories.ISyncHabitService
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class RemoteSyncService(private val localHabitRepository: HabitsRepository,
                         private val remoteHabitRepository: RemoteHabitRepository): ISyncHabitService {
 
     override suspend fun syncLocalAndRemote() {
-        val localHabits = localHabitRepository.habits.value
+        val localHabits = localHabitRepository.habitsFlow.first()
         val remoteHabits = remoteHabitRepository.getHabitsFromRemote()
-        if (localHabits != null && remoteHabits != null) {
+        if (remoteHabits != null) {
             sync(localHabits, remoteHabits)
         }
     }

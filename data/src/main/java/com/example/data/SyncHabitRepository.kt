@@ -1,20 +1,20 @@
 package com.example.data
 
-import androidx.lifecycle.LiveData
 import com.example.data.database.HabitsRepository
 import com.example.data.remote.habits.RemoteHabitRepository
 import com.example.data.remote.habits.models.HabitDone
 import com.example.data.remote.habits.models.HabitUid
 import com.example.domain.models.Habit
 import com.example.domain.repositories.ISyncHabitRepository
+import kotlinx.coroutines.flow.Flow
 
 
 /*
     Используется для синхронных действий с сервером и локальной бд
  */
 class SyncHabitRepository(private val localRepository: HabitsRepository, private val remoteRepository: RemoteHabitRepository) : ISyncHabitRepository {
-    fun getHabits(): LiveData<List<Habit>> {
-        return localRepository.habits
+    fun getHabits(): Flow<List<Habit>> {
+        return localRepository.habitsFlow
     }
 
     override suspend fun addHabit(habit: Habit) {

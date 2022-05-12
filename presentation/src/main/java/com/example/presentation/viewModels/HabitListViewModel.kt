@@ -1,33 +1,33 @@
 package com.example.presentation.viewModels
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.data.database.HabitsRepository
 import com.example.domain.models.Habit
 import com.example.domain.models.HabitType
+import kotlin.coroutines.CoroutineContext
 
 class HabitListViewModel(private val habitsRepository: HabitsRepository,
                          private val filterByType: HabitType,
                          private var filterByName: String,
-                         lifecycleOwner: LifecycleOwner
+                         lifecycleOwner: LifecycleOwner,
+                         coroutineContext: CoroutineContext,
 ) : ViewModel() {
+    val habitsFlow = habitsRepository.habitsFlow.asLiveData(coroutineContext)
     val habitsList: MutableLiveData<List<Habit>> = MutableLiveData()
+    var lastHabitsList: List<Habit> = emptyList()
     init {
-        habitsRepository.habits.observe(lifecycleOwner) { habits -> updateHabitsList(habits) }
+        habitsFlow.observe(lifecycleOwner) { habits -> updateHabitsList(habits) }
     }
 
-    fun getHabitsCount(): Int {
-        return habitsRepository.getHabitsCount()
-    }
 
     fun setNameFilter(nameFilter: String) {
         filterByName = nameFilter
-        habitsList.value = filterHabits(habitsRepository.habits.value ?: listOf())
+        habitsList.value = filterHabits(lastHabitsList ?: listOf())
     }
 
     private fun updateHabitsList(habits: List<Habit>) {
-        habitsList.value = filterHabits(habits)
+        lastHabitsList = habits
+        habitsList.value = filterHabits(lastHabitsList)
     }
 
     private fun filterHabits(habitsToFilter: List<Habit>): List<Habit> {

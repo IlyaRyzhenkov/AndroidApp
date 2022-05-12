@@ -3,11 +3,12 @@ package com.example.data.database
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.data.database.entities.DbHabit
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HabitsDAO {
     @Query("SELECT * FROM habits")
-    fun getAllHabits() : LiveData<List<DbHabit>>
+    fun getAllHabits() : Flow<List<DbHabit>>
 
     @Query("SELECT * FROM habits WHERE habit_id=:id")
     fun getHabitById(id: Long) : DbHabit

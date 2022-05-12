@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallbac
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataComponent = DaggerDataComponent.builder().dataModule(
-            DataModule(applicationContext, this)).build()
+            DataModule(applicationContext)).build()
         operationsComponent = DaggerOperationsComponent.builder().domainModule(
             DomainModule(dataComponent.getHabitsRepository(), dataComponent.getRemoteHabitsRepository(),
                 dataComponent.getSyncHabitRepository(), dataComponent.getRemoteSyncService(), GlobalScope)).build()
