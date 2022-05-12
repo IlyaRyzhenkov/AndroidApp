@@ -15,3 +15,6 @@
 local.properties
 .idea/
 imgSrc/
+/domain/build
+/data/build
+presentation/build/

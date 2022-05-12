@@ -1,9 +1,8 @@
 package com.example.presentation.viewModels
 
 import androidx.lifecycle.ViewModel
-import com.example.data.SyncHabitRepository
 import com.example.domain.models.Habit
-import com.example.domain.operations.OperationFactory
+import com.example.domain.operations.habit.HabitOperationFactory
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -13,7 +12,7 @@ enum class CreateButtonClickMode {
     ADD_HABIT;
 }
 
-class HabitEditorViewModel(private val operationFactory: OperationFactory) : ViewModel(), CoroutineScope {
+class HabitEditorViewModel(private val habitOperationFactory: HabitOperationFactory) : ViewModel(), CoroutineScope {
     private val job = SupervisorJob()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job + CoroutineExceptionHandler { _, e -> throw e }
@@ -27,15 +26,15 @@ class HabitEditorViewModel(private val operationFactory: OperationFactory) : Vie
     }
 
     private fun addHabit(habit: Habit) {
-        operationFactory.createAddHabitOperation(habit).run()
+        habitOperationFactory.createAddHabitOperation(habit).run()
     }
 
     private fun deleteHabit(habit: Habit?) {
-        operationFactory.createDeleteHabitOperation(habit).run()
+        habitOperationFactory.createDeleteHabitOperation(habit).run()
     }
 
     private fun changeHabit(newHabit: Habit) {
-        operationFactory.createUpdateHabitOperation(newHabit).run()
+        habitOperationFactory.createUpdateHabitOperation(newHabit).run()
     }
 
     override fun onCleared() {

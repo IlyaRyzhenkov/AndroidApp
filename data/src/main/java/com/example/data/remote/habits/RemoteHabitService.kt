@@ -1,5 +1,6 @@
 package com.example.data.remote.habits
 
+import com.example.data.remote.habits.models.HabitDone
 import com.example.data.remote.habits.models.HabitUid
 import com.example.domain.models.Habit
 import okhttp3.ResponseBody
@@ -22,4 +23,8 @@ interface RemoteHabitService {
     @HTTP(method = "DELETE",path = "habit", hasBody = true)
     @Headers("Authorization: $SERVER_TOKEN")
     fun deleteHabit(@Body habitUid: HabitUid) : Call<ResponseBody>
+
+    @POST("habit_done")
+    @Headers("Authorization: $SERVER_TOKEN")
+    fun completeHabit(@Body habitDone: HabitDone) : Call<ResponseBody>
 }

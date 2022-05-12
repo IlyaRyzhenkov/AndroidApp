@@ -18,7 +18,7 @@ import com.example.domain.DaggerOperationsComponent
 import com.example.domain.DomainModule
 import com.example.domain.OperationsComponent
 import com.example.domain.models.Habit
-import com.example.domain.operations.OperationFactory
+import com.example.domain.operations.global.GlobalOperationFactory
 import com.example.presentation.DaggerPresentationComponent
 import com.example.presentation.PresentationComponent
 import com.example.presentation.PresentationModule
@@ -28,16 +28,19 @@ import com.example.presentation.fragments.habitEditor.HabitsEditorCallback
 import com.example.presentation.fragments.habitEditor.HabitsEditorFragment
 import com.example.presentation.fragments.habitList.HabitListCallback
 import com.example.presentation.fragments.tab.TabFragment
+import com.example.presentation.service.ToastService
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.GlobalScope
+import java.time.Instant
 
 class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallback {
     private lateinit var dataComponent: DataComponent
     private lateinit var operationsComponent: OperationsComponent
     private lateinit var presentationComponent: PresentationComponent
 
-    private lateinit var operationFactory: OperationFactory
+    private lateinit var globalOperationFactory: GlobalOperationFactory
+    private lateinit var toastService: ToastService
 
     private lateinit var tabFragment: TabFragment
     private lateinit var editorFragment: HabitsEditorFragment
@@ -51,16 +54,19 @@ class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallbac
         dataComponent = DaggerDataComponent.builder().dataModule(
             DataModule(applicationContext, this)).build()
         operationsComponent = DaggerOperationsComponent.builder().domainModule(
-            DomainModule(dataComponent.getSyncHabitRepository(), dataComponent.getRemoteSyncService(), GlobalScope)).build()
+            DomainModule(dataComponent.getHabitsRepository(), dataComponent.getRemoteHabitsRepository(),
+                dataComponent.getSyncHabitRepository(), dataComponent.getRemoteSyncService(), GlobalScope)).build()
         presentationComponent = DaggerPresentationComponent.builder().presentationModule(
-            PresentationModule(operationsComponent.getOperationFactory(), dataComponent.getHabitsRepository(), this)
+            PresentationModule(operationsComponent.getHabitOperationFactory(), dataComponent.getHabitsRepository(), this)
         ).build()
 
         // Синхронизируем привычки
-        operationFactory = operationsComponent.getOperationFactory()
-        operationFactory.createSyncOperation().run()
+        globalOperationFactory = operationsComponent.getGlobalOperationFactory()
+        globalOperationFactory.createSyncOperation().run()
+
         editorFragment = presentationComponent.getHabitsEditorFragment()
         tabFragment = presentationComponent.getTabFragment()
+        toastService = presentationComponent.getToastService()
 
         setContentView(R.layout.bottom_sheet_wrapper)
         if (savedInstanceState == null) {
@@ -102,6 +108,12 @@ class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallbac
 
     override fun onItemClicked(habit: Habit, position: Int) {
         startEditorFragment(habit, position)
+    }
+
+    override fun onCompleteHabitClicked(habit: Habit) {
+        val completionDate = Instant.now().epochSecond
+        val result = operationsComponent.getHabitOperationFactory().createCompleteHabitOperation(habit, completionDate).run()
+        toastService.createToastOnHabitCompletion(habit, result.completionsByHabitPeriod)
     }
 
     private fun onNewHabitButtonClicked() {
@@ -163,17 +175,15 @@ class MainActivity : AppCompatActivity(), HabitsEditorCallback, HabitListCallbac
     }
 
     private fun menuClearLocalHabitsClicked() {
-        // TODO clear local operation
-        operationFactory.createSyncOperation().run()
+        globalOperationFactory.createClearLocalRepositoryOperation().run()
     }
 
     private fun menuClearRemoteHabitsClicked() {
-        // TODO clear remote operation
-        operationFactory.createSyncOperation().run()
+        globalOperationFactory.createClearRemoteRepositoryOperation().run()
     }
 
     private fun menuSyncHabitsClicked() {
-        operationFactory.createSyncOperation().run()
+        globalOperationFactory.createSyncOperation().run()
     }
 
     private fun loadUserAvatar(avatarView: ImageView) {

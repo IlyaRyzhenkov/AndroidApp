@@ -10,6 +10,7 @@ import com.example.data.database.HabitsRepository
 import com.example.data.remote.habits.RemoteHabitRepository
 import com.example.data.remote.habits.RemoteHabitService
 import com.example.data.remote.habits.RemoteSyncService
+import com.example.data.remote.habits.models.HabitDone
 import com.example.data.remote.habits.models.HabitUid
 import com.example.domain.models.Habit
 import com.google.gson.Gson
@@ -48,7 +49,7 @@ class DataModule(private val context: Context, private val lifecycleOwner: Lifec
     @Singleton
     fun provideHabitDatabase(databaseMigrations: DatabaseMigrations): HabitDatabase {
         return Room.databaseBuilder(context, HabitDatabase::class.java, "habitDatabase")
-            .addMigrations(databaseMigrations.MIGRATION_1_2, databaseMigrations.MIGRATION_2_3)
+            .addMigrations(databaseMigrations.MIGRATION_1_2, databaseMigrations.MIGRATION_2_3, databaseMigrations.MIGRATION_3_4)
             .build()
     }
 
@@ -98,6 +99,8 @@ class DataModule(private val context: Context, private val lifecycleOwner: Lifec
             .registerTypeAdapter(Habit::class.java, Habit.HabitJsonDeserializer())
             .registerTypeAdapter(HabitUid::class.java, HabitUid.HabitUidJsonSerializer())
             .registerTypeAdapter(HabitUid::class.java, HabitUid.HabitUidJsonDeserializer())
+            .registerTypeAdapter(HabitDone::class.java, HabitDone.HabitDoneJsonSerializer())
+            .registerTypeAdapter(HabitDone::class.java, HabitDone.HabitDoneJsonSerializer())
             .create()
     }
 }
@@ -110,4 +113,6 @@ interface DataComponent {
     fun getRemoteSyncService(): RemoteSyncService
 
     fun getHabitsRepository(): HabitsRepository
+
+    fun getRemoteHabitsRepository(): RemoteHabitRepository
 }

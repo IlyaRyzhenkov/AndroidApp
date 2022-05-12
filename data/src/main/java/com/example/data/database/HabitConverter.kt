@@ -1,6 +1,7 @@
 package com.example.data.database
 
 import com.example.data.database.entities.DbHabit
+import com.example.data.database.entities.DbHabitCompletion
 import com.example.domain.models.Habit
 import com.example.domain.models.HabitType
 import java.time.Instant
@@ -33,6 +34,15 @@ class HabitConverter {
             intColor = habit.color,
             uid = habit.uid,
             date = habit.date.epochSecond,
+        )
+    }
+
+    fun getCompletionByHabit(habit: Habit, date: Long): DbHabitCompletion {
+        return DbHabitCompletion(
+            id = null,
+            habitId = habit.id,
+            habitUid = habit.uid,
+            date = date
         )
     }
 }

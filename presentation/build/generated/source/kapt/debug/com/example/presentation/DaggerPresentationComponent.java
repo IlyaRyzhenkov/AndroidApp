@@ -7,6 +7,7 @@ import com.example.presentation.fragments.habitEditor.HabitsEditorFragment;
 import com.example.presentation.fragments.habitList.HabitListFragmentFactory;
 import com.example.presentation.fragments.tab.HabitPagerAdapter;
 import com.example.presentation.fragments.tab.TabFragment;
+import com.example.presentation.service.ToastService;
 import dagger.internal.DoubleCheck;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
@@ -26,6 +27,8 @@ public final class DaggerPresentationComponent implements PresentationComponent 
 
   private Provider<AppInfoFragment> provideAppInfoFragmentProvider;
 
+  private Provider<ToastService> provideToastServiceProvider;
+
   private DaggerPresentationComponent(PresentationModule presentationModuleParam) {
 
     initialize(presentationModuleParam);
@@ -42,6 +45,7 @@ public final class DaggerPresentationComponent implements PresentationComponent 
     this.provideHabitPagerAdapterProvider = DoubleCheck.provider(PresentationModule_ProvideHabitPagerAdapterFactory.create(presentationModuleParam, provideHabitListFragmentFactoryProvider));
     this.provideTabFragmentProvider = DoubleCheck.provider(PresentationModule_ProvideTabFragmentFactory.create(presentationModuleParam, provideHabitPagerAdapterProvider));
     this.provideAppInfoFragmentProvider = DoubleCheck.provider(PresentationModule_ProvideAppInfoFragmentFactory.create(presentationModuleParam));
+    this.provideToastServiceProvider = DoubleCheck.provider(PresentationModule_ProvideToastServiceFactory.create(presentationModuleParam));
   }
 
   @Override
@@ -57,6 +61,11 @@ public final class DaggerPresentationComponent implements PresentationComponent 
   @Override
   public AppInfoFragment getAppInfoFragment() {
     return provideAppInfoFragmentProvider.get();
+  }
+
+  @Override
+  public ToastService getToastService() {
+    return provideToastServiceProvider.get();
   }
 
   public static final class Builder {

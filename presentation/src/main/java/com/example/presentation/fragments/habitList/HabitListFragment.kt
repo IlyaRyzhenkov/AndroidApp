@@ -61,7 +61,8 @@ class HabitListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         habitListView = view.findViewById(R.id.habit_list)
-        habitListAdapter = HabitListAdapter(habitsListViewModel.habitsList.value ?: listOf(), this::onItemClick)
+        habitListAdapter = HabitListAdapter(habitsListViewModel.habitsList.value ?: listOf(),
+            this::onItemClick, this::onCompleteHabitClick)
         habitListView.adapter = habitListAdapter
         habitsListViewModel.habitsList.observe(this) {
             habitListAdapter.habits = it
@@ -83,5 +84,9 @@ class HabitListFragment : Fragment() {
 
     private fun onItemClick(habit: Habit, position : Int) {
         callback?.onItemClicked(habit, position)
+    }
+
+    private fun onCompleteHabitClick(habit: Habit) {
+        callback?.onCompleteHabitClicked(habit)
     }
 }

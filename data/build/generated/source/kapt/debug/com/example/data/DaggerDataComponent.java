@@ -81,6 +81,11 @@ public final class DaggerDataComponent implements DataComponent {
     return provideHabitsRepositoryProvider.get();
   }
 
+  @Override
+  public RemoteHabitRepository getRemoteHabitsRepository() {
+    return provideRemoteHabitRepositoryProvider.get();
+  }
+
   public static final class Builder {
     private DataModule dataModule;
 

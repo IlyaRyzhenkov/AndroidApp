@@ -4,6 +4,7 @@ package com.example.presentation.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,9 @@ import java.lang.String;
 public final class HabitListElementBinding implements ViewBinding {
   @NonNull
   private final ConstraintLayout rootView;
+
+  @NonNull
+  public final Button completeHabitButton;
 
   @NonNull
   public final TextView habitCounter;
@@ -45,11 +49,12 @@ public final class HabitListElementBinding implements ViewBinding {
   public final Guideline listItemGuideine2;
 
   private HabitListElementBinding(@NonNull ConstraintLayout rootView,
-      @NonNull TextView habitCounter, @NonNull TextView habitDescription,
-      @NonNull TextView habitName, @NonNull TextView habitPeriod, @NonNull TextView habitPriority,
-      @NonNull TextView habitType, @NonNull Guideline listItemGuideine1,
-      @NonNull Guideline listItemGuideine2) {
+      @NonNull Button completeHabitButton, @NonNull TextView habitCounter,
+      @NonNull TextView habitDescription, @NonNull TextView habitName,
+      @NonNull TextView habitPeriod, @NonNull TextView habitPriority, @NonNull TextView habitType,
+      @NonNull Guideline listItemGuideine1, @NonNull Guideline listItemGuideine2) {
     this.rootView = rootView;
+    this.completeHabitButton = completeHabitButton;
     this.habitCounter = habitCounter;
     this.habitDescription = habitDescription;
     this.habitName = habitName;
@@ -87,6 +92,12 @@ public final class HabitListElementBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.complete_habit_button;
+      Button completeHabitButton = ViewBindings.findChildViewById(rootView, id);
+      if (completeHabitButton == null) {
+        break missingId;
+      }
+
       id = R.id.habit_counter;
       TextView habitCounter = ViewBindings.findChildViewById(rootView, id);
       if (habitCounter == null) {
@@ -135,9 +146,9 @@ public final class HabitListElementBinding implements ViewBinding {
         break missingId;
       }
 
-      return new HabitListElementBinding((ConstraintLayout) rootView, habitCounter,
-          habitDescription, habitName, habitPeriod, habitPriority, habitType, listItemGuideine1,
-          listItemGuideine2);
+      return new HabitListElementBinding((ConstraintLayout) rootView, completeHabitButton,
+          habitCounter, habitDescription, habitName, habitPeriod, habitPriority, habitType,
+          listItemGuideine1, listItemGuideine2);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -2733,6 +2733,7 @@ int id colorPickerColor8 0x7f08009a
 int id colorPickerColor9 0x7f08009b
 int id colorPickerItemsLayout 0x7f08009c
 int id colorPickerScroll 0x7f08009d
+int id complete_habit_button 0x7f080228
 int id compress 0x7f08009e
 int id confirm_button 0x7f08009f
 int id constraint 0x7f0800a0
@@ -3359,6 +3360,7 @@ int string character_counter_overflowed_content_description 0x7f0f0028
 int string character_counter_pattern 0x7f0f0029
 int string chip_text 0x7f0f002a
 int string clear_text_end_icon_content_description 0x7f0f002b
+int string complete_habit_button_text 0x7f0f00ae
 int string default_habit_color_rgb_text 0x7f0f002c
 int string default_habit_description 0x7f0f002d
 int string default_habit_name 0x7f0f002e

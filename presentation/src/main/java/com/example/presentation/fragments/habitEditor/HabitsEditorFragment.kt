@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.presentation.R
 import com.example.domain.models.Habit
 import com.example.domain.models.HabitType
-import com.example.domain.operations.OperationFactory
+import com.example.domain.operations.habit.HabitOperationFactory
 import com.example.presentation.viewModels.CreateButtonClickMode
 import com.example.presentation.viewModels.HabitEditorViewModel
 import java.time.Instant
@@ -49,7 +49,7 @@ enum class RadiobuttonsToHabitTypes(val id: Int, val type: HabitType) {
 
 class HabitsEditorFragment : Fragment() {
     private lateinit var editViewModel: HabitEditorViewModel
-    lateinit var operaionFactory: OperationFactory
+    lateinit var operaionFactory: HabitOperationFactory
 
     var callback: HabitsEditorCallback? = null
 
@@ -70,9 +70,9 @@ class HabitsEditorFragment : Fragment() {
     private var habitColor: Int = 0XFF00FFFF.toInt()
 
     companion object {
-        fun newInstance(operationFactory: OperationFactory) : HabitsEditorFragment {
+        fun newInstance(habitOperationFactory: HabitOperationFactory) : HabitsEditorFragment {
             val fragment = HabitsEditorFragment()
-            fragment.operaionFactory = operationFactory
+            fragment.operaionFactory = habitOperationFactory
             return fragment
         }
     }

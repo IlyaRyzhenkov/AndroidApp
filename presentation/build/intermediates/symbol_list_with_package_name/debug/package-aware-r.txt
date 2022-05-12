@@ -2734,6 +2734,7 @@ id colorPickerColor8
 id colorPickerColor9
 id colorPickerItemsLayout
 id colorPickerScroll
+id complete_habit_button
 id compress
 id confirm_button
 id constraint
@@ -3360,6 +3361,7 @@ string character_counter_overflowed_content_description
 string character_counter_pattern
 string chip_text
 string clear_text_end_icon_content_description
+string complete_habit_button_text
 string default_habit_color_rgb_text
 string default_habit_description
 string default_habit_name

@@ -3,6 +3,7 @@ package com.example.data
 import androidx.lifecycle.LiveData
 import com.example.data.database.HabitsRepository
 import com.example.data.remote.habits.RemoteHabitRepository
+import com.example.data.remote.habits.models.HabitDone
 import com.example.data.remote.habits.models.HabitUid
 import com.example.domain.models.Habit
 import com.example.domain.repositories.ISyncHabitRepository
@@ -65,5 +66,12 @@ class SyncHabitRepository(private val localRepository: HabitsRepository, private
             localRepository.removeHabit(habit)
             remoteRepository.deleteHabitFromRemote(HabitUid(habit.uid!!))
         }
+    }
+
+    override suspend fun completeHabit(habit: Habit, completionDate: Long): Int {
+        if (habit.uid != null) {
+            remoteRepository.completeHabit(HabitDone(completionDate, habit.uid!!))
+        }
+        return localRepository.completeHabit(habit, completionDate)
     }
 }

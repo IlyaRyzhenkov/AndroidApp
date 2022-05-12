@@ -28,6 +28,7 @@
     <string name="habit_type">Тип:</string>
     <string name="habit_period">Периодичность:</string>
     <string name="habit_counter">Выполнения:</string>
+    <string name="complete_habit_button_text">Выполнить</string>
 
     <string name="good_habit_repr">хорошая</string>
     <string name="bad_habit_repr">вредная</string>

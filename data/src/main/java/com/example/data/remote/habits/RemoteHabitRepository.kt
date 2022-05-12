@@ -1,10 +1,12 @@
 package com.example.data.remote.habits
 
+import com.example.data.remote.habits.models.HabitDone
 import com.example.data.remote.habits.models.HabitUid
 import com.example.domain.models.Habit
+import com.example.domain.repositories.IRemoteHabitRepository
 import kotlinx.coroutines.delay
 
-class RemoteHabitRepository(private val remoteHabitService: RemoteHabitService) {
+class RemoteHabitRepository(private val remoteHabitService: RemoteHabitService): IRemoteHabitRepository {
     companion object {
         const val SERVER_BASE_URL = "https://droid-test-server.doubletapp.ru/api/"
         private const val WAITING_TIME_ON_ERROR : Long = 10000
@@ -50,12 +52,21 @@ class RemoteHabitRepository(private val remoteHabitService: RemoteHabitService) 
         }
     }
 
-    suspend fun clearHabits() {
+    override suspend fun clearHabits() {
         val habits = getHabitsFromRemote()
         if (habits != null) {
             for (habit in habits) {
                 deleteHabitFromRemote(HabitUid(habit.uid!!))
             }
+        }
+    }
+
+    suspend fun completeHabit(habitDone: HabitDone, retries: Int = 0) {
+        val call = remoteHabitService.completeHabit(habitDone)
+        val response = call.execute()
+        if (!response.isSuccessful && retries < MAX_RETRIES_COUNT) {
+            delay(WAITING_TIME_ON_ERROR)
+            completeHabit(habitDone, retries + 1)
         }
     }
 }

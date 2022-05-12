@@ -34,20 +34,26 @@ import javax.annotation.processing.Generated;
 public final class HabitDatabase_Impl extends HabitDatabase {
   private volatile HabitsDAO _habitsDAO;
 
+  private volatile HabitsCompletionDAO _habitsCompletionDAO;
+
   @Override
   protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration configuration) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(3) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(4) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
         _db.execSQL("CREATE TABLE IF NOT EXISTS `habits` (`habit_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `priority` INTEGER NOT NULL, `type` INTEGER NOT NULL, `period` INTEGER NOT NULL, `counter` INTEGER NOT NULL, `int_color` INTEGER NOT NULL, `date` INTEGER NOT NULL, `uid` TEXT)");
         _db.execSQL("CREATE INDEX IF NOT EXISTS `index_habits_uid` ON `habits` (`uid`)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `habits_completion` (`completion_id` INTEGER PRIMARY KEY AUTOINCREMENT, `habit_id` INTEGER, `date` INTEGER NOT NULL DEFAULT 0, `habit_uid` TEXT, FOREIGN KEY(`habit_id`) REFERENCES `habits`(`habit_id`) ON UPDATE CASCADE ON DELETE CASCADE )");
+        _db.execSQL("CREATE INDEX IF NOT EXISTS `index_habits_completion_habit_id_date` ON `habits_completion` (`habit_id`, `date`)");
+        _db.execSQL("CREATE INDEX IF NOT EXISTS `index_habits_completion_habit_uid_date` ON `habits_completion` (`habit_uid`, `date`)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b016451a25db074d5639121b88533a54')");
+        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2de64de86fbbeccc3cb1e8d4fad23136')");
       }
 
       @Override
       public void dropAllTables(SupportSQLiteDatabase _db) {
         _db.execSQL("DROP TABLE IF EXISTS `habits`");
+        _db.execSQL("DROP TABLE IF EXISTS `habits_completion`");
         if (mCallbacks != null) {
           for (int _i = 0, _size = mCallbacks.size(); _i < _size; _i++) {
             mCallbacks.get(_i).onDestructiveMigration(_db);
@@ -67,6 +73,7 @@ public final class HabitDatabase_Impl extends HabitDatabase {
       @Override
       public void onOpen(SupportSQLiteDatabase _db) {
         mDatabase = _db;
+        _db.execSQL("PRAGMA foreign_keys = ON");
         internalInitInvalidationTracker(_db);
         if (mCallbacks != null) {
           for (int _i = 0, _size = mCallbacks.size(); _i < _size; _i++) {
@@ -107,9 +114,26 @@ public final class HabitDatabase_Impl extends HabitDatabase {
                   + " Expected:\n" + _infoHabits + "\n"
                   + " Found:\n" + _existingHabits);
         }
+        final HashMap<String, TableInfo.Column> _columnsHabitsCompletion = new HashMap<String, TableInfo.Column>(4);
+        _columnsHabitsCompletion.put("completion_id", new TableInfo.Column("completion_id", "INTEGER", false, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsHabitsCompletion.put("habit_id", new TableInfo.Column("habit_id", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsHabitsCompletion.put("date", new TableInfo.Column("date", "INTEGER", true, 0, "0", TableInfo.CREATED_FROM_ENTITY));
+        _columnsHabitsCompletion.put("habit_uid", new TableInfo.Column("habit_uid", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysHabitsCompletion = new HashSet<TableInfo.ForeignKey>(1);
+        _foreignKeysHabitsCompletion.add(new TableInfo.ForeignKey("habits", "CASCADE", "CASCADE",Arrays.asList("habit_id"), Arrays.asList("habit_id")));
+        final HashSet<TableInfo.Index> _indicesHabitsCompletion = new HashSet<TableInfo.Index>(2);
+        _indicesHabitsCompletion.add(new TableInfo.Index("index_habits_completion_habit_id_date", false, Arrays.asList("habit_id","date"), Arrays.asList("ASC","ASC")));
+        _indicesHabitsCompletion.add(new TableInfo.Index("index_habits_completion_habit_uid_date", false, Arrays.asList("habit_uid","date"), Arrays.asList("ASC","ASC")));
+        final TableInfo _infoHabitsCompletion = new TableInfo("habits_completion", _columnsHabitsCompletion, _foreignKeysHabitsCompletion, _indicesHabitsCompletion);
+        final TableInfo _existingHabitsCompletion = TableInfo.read(_db, "habits_completion");
+        if (! _infoHabitsCompletion.equals(_existingHabitsCompletion)) {
+          return new RoomOpenHelper.ValidationResult(false, "habits_completion(com.example.data.database.entities.DbHabitCompletion).\n"
+                  + " Expected:\n" + _infoHabitsCompletion + "\n"
+                  + " Found:\n" + _existingHabitsCompletion);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "b016451a25db074d5639121b88533a54", "467ee389683fd513207fc15c858c3203");
+    }, "2de64de86fbbeccc3cb1e8d4fad23136", "c3b400047cace9231028504a6e31427d");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
         .name(configuration.name)
         .callback(_openCallback)
@@ -122,19 +146,30 @@ public final class HabitDatabase_Impl extends HabitDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "habits");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "habits","habits_completion");
   }
 
   @Override
   public void clearAllTables() {
     super.assertNotMainThread();
     final SupportSQLiteDatabase _db = super.getOpenHelper().getWritableDatabase();
+    boolean _supportsDeferForeignKeys = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP;
     try {
+      if (!_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA foreign_keys = FALSE");
+      }
       super.beginTransaction();
+      if (_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA defer_foreign_keys = TRUE");
+      }
       _db.execSQL("DELETE FROM `habits`");
+      _db.execSQL("DELETE FROM `habits_completion`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
+      if (!_supportsDeferForeignKeys) {
+        _db.execSQL("PRAGMA foreign_keys = TRUE");
+      }
       _db.query("PRAGMA wal_checkpoint(FULL)").close();
       if (!_db.inTransaction()) {
         _db.execSQL("VACUUM");
@@ -146,6 +181,7 @@ public final class HabitDatabase_Impl extends HabitDatabase {
   protected Map<Class<?>, List<Class<?>>> getRequiredTypeConverters() {
     final HashMap<Class<?>, List<Class<?>>> _typeConvertersMap = new HashMap<Class<?>, List<Class<?>>>();
     _typeConvertersMap.put(HabitsDAO.class, HabitsDAO_Impl.getRequiredConverters());
+    _typeConvertersMap.put(HabitsCompletionDAO.class, HabitsCompletionDAO_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -171,6 +207,20 @@ public final class HabitDatabase_Impl extends HabitDatabase {
           _habitsDAO = new HabitsDAO_Impl(this);
         }
         return _habitsDAO;
+      }
+    }
+  }
+
+  @Override
+  public HabitsCompletionDAO habitsCompletionDAO() {
+    if (_habitsCompletionDAO != null) {
+      return _habitsCompletionDAO;
+    } else {
+      synchronized(this) {
+        if(_habitsCompletionDAO == null) {
+          _habitsCompletionDAO = new HabitsCompletionDAO_Impl(this);
+        }
+        return _habitsCompletionDAO;
       }
     }
   }

@@ -1,14 +1,15 @@
 package com.example.data.database
 
-import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.data.database.entities.DbHabit
 import com.example.domain.models.Habit
+import com.example.domain.repositories.IHabitsRepository
+import com.example.domain.utils.DateUtils
 
-class HabitsRepository(lifecycleOwner: LifecycleOwner,
-                       private val habitDatabase: HabitDatabase, val habitConverter: HabitConverter) {
+class HabitsRepository(lifecycleOwner: LifecycleOwner, private val habitDatabase: HabitDatabase,
+                       private val habitConverter: HabitConverter): IHabitsRepository {
     private val dbHabitsLiveData: LiveData<List<DbHabit>> = habitDatabase.habitsDAO().getAllHabits()
     val habits: MutableLiveData<List<Habit>> = MutableLiveData()
     init {
@@ -41,7 +42,15 @@ class HabitsRepository(lifecycleOwner: LifecycleOwner,
         // habitDatabase.habitsDAO().insertHabit(dbHabit)
     }
 
-    suspend fun clearHabits() {
+    suspend fun completeHabit(habit: Habit, date: Long): Int {
+        val completion = habitConverter.getCompletionByHabit(habit, date)
+        habitDatabase.habitsCompletionDAO().insert(completion)
+        val dateFrom = DateUtils.getFromDate(dateNow = date, habitPeriodInDays = habit.period)
+        val result = habitDatabase.habitsCompletionDAO().getCompletionCountByHabitId(habit.id, dateFrom)
+        return result
+    }
+
+    override suspend fun clearHabits() {
         habitDatabase.habitsDAO().clear()
     }
 
